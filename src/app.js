@@ -8,6 +8,7 @@ const twitchStrategy = require("passport-twitch-new").Strategy
 const findOrCreate = require('mongoose-findorcreate')
 
 const path = require("path")
+const { profile } = require("console")
 
 require('dotenv').config( {
   path: path.join(__dirname, '.env')
@@ -16,7 +17,7 @@ require('dotenv').config( {
 const app = express();
 
 app.set("view engine", "ejs")
-app.use(express.static("public"));
+app.use(express.static("public"))
 
 // using sessions
 app.use(session({
@@ -26,7 +27,7 @@ app.use(session({
 }))
 
 // initialize passport
-app.use(passport.initialize());
+app.use(passport.initialize())
 app.use(passport.session())
 
 // connect to database in docker
@@ -40,6 +41,8 @@ const userSchema = new mongoose.Schema({
 	email: String,
 	password: String,
 	twitchId: String,
+  displayName: String,
+  profileImage: String,
 	secret: String,
 });
 
@@ -55,9 +58,9 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(function (id, done) {
 	User.findById(id, function (err, user) {
-		done(err, user);
-	});
-});
+		done(err, user)
+	})
+})
 
 passport.use(new twitchStrategy({
   clientID: process.env.TWITCH_CLIENT_ID,
@@ -68,7 +71,7 @@ passport.use(new twitchStrategy({
 function(accessToken, refreshToken, profile, done) {
   // Suppose we are using mongo..
   console.log(profile)
-  User.findOrCreate({ twitchId: profile.id }, function (err, user) {
+  User.findOrCreate({ twitchId: profile.id, displayName: profile.display_name, profileImage: profile.profile_image_url }, function (err, user) {
     return done(err, user)
   })
 }
