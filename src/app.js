@@ -19,6 +19,8 @@ const app = express();
 app.set("view engine", "ejs")
 app.use(express.static("public"))
 
+var isLoggedIn = false
+
 // using sessions
 app.use(session({
   secret: process.env.SECRET_KEY,
@@ -86,24 +88,22 @@ app.get(
 
 app.get("/auth/twitch/callback", passport.authenticate("twitch", { failureRedirect: "/" }), function(req, res) {
   // authenticated
-  res.redirect("/posts");
+  isLoggedIn = true
+  res.redirect("/posts")
 });
 
 app.get("/", (req, res) => {
-	res.render("home")
+	res.render("home", { isLoggedIn: isLoggedIn }) 
 })
 
 app.get("/posts", function (req, res) {
 	if(req.isAuthenticated()){
-    res.render("posts");
+    res.render("posts", { isLoggedIn: isLoggedIn })
   } else {
     res.redirect("/")
   }
 });
 
-app.get("/login", (req, res) => {
-  res.render("login")
-})
 
 app.listen(3001, () => {
 	console.log("Server started on port 3001")
