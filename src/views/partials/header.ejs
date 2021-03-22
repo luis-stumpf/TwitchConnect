@@ -19,7 +19,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/posts">Posts</a>
@@ -32,7 +32,11 @@
                 <% if (isLoggedIn == false) { %> 
                 <a href="/auth/twitch"><button type="button" class="btn login-btn">Login with Twitch</button></a>
                 <% } else { %> 
-                <a href="/auth/twitch"><button type="button" class="btn login-btn">Logged in with Twitch</button></a>
+                
+                <a href="/auth/twitch"><button type="button" class="btn login-btn">
+                    Logged in as <%= userName.displayName %> 
+                    <img class="profile-img" src="<%= userName.profileImage %>" alt="profileImage"></button>
+                </a>
                 <% } %> 
               </div>
             

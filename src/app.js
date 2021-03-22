@@ -22,6 +22,7 @@ app.use(express.static("public"))
 app.use(bodyParser.urlencoded({extended: true}));
 
 var isLoggedIn = false
+var currentUser 
 
 // using sessions
 app.use(session({
@@ -73,7 +74,7 @@ passport.use(new twitchStrategy({
 },
 function(accessToken, refreshToken, profile, done) {
   // Suppose we are using mongo..
-  console.log(profile)
+  currentUser = profile.display_name
   User.findOrCreate({ twitchId: profile.id, displayName: profile.display_name, profileImage: profile.profile_image_url }, function (err, user) {
     return done(err, user)
   })
@@ -93,7 +94,6 @@ const postShema = {
 const Post = mongoose.model("Post", postShema);
 
 
-
 // rendering pages
 app.get(
 	"/auth/twitch",
@@ -108,13 +108,22 @@ app.get("/auth/twitch/callback", passport.authenticate("twitch", { failureRedire
 
 // rendering home-page
 app.get("/", (req, res) => {
-	res.render("home", { isLoggedIn: isLoggedIn }) 
+  User.findOne({ displayName: currentUser }, function(err, user){
+    userData = user
+    res.render("home", { 
+      isLoggedIn: isLoggedIn,
+      userName: userData
+   });
+})
 })
 
 // rendering posts
 app.get("/posts", function (req, res) {
 	if(req.isAuthenticated()){
-    res.render("posts", { isLoggedIn: isLoggedIn })
+    res.render("posts", { 
+      isLoggedIn: isLoggedIn,
+      userName: userData,
+    })
   } else {
     res.redirect("/")
   }
@@ -122,7 +131,10 @@ app.get("/posts", function (req, res) {
 
 // rendering login-page
 app.get("/login", (req, res) => {
-  res.render("login", { isLoggedIn: isLoggedIn })
+  res.render("login", { 
+    isLoggedIn: isLoggedIn,
+    userName: userData
+  })
 })
 
 // rendering compose-page
@@ -130,7 +142,10 @@ app.get("/login", (req, res) => {
 
 app.get("/compose", (req, res) => {
   if(req.isAuthenticated()){
-  res.render("compose", { isLoggedIn: isLoggedIn })
+  res.render("compose", { 
+    isLoggedIn: isLoggedIn,
+    userName: userData
+  })
   } else {
     res.redirect("/login")
   }
