@@ -19,6 +19,7 @@ const app = express();
 
 app.set("view engine", "ejs")
 app.use(express.static("public"))
+app.use(bodyParser.urlencoded({extended: true}));
 
 var isLoggedIn = false
 
@@ -82,7 +83,7 @@ function(accessToken, refreshToken, profile, done) {
 //test
 
 //Posts
-/*
+
 
 const postShema = {
   title: String,
@@ -91,7 +92,7 @@ const postShema = {
 
 const Post = mongoose.model("Post", postShema);
 
-*/
+
 
 // rendering pages
 app.get(
@@ -125,6 +126,8 @@ app.get("/login", (req, res) => {
 })
 
 // rendering compose-page
+
+
 app.get("/compose", (req, res) => {
   if(req.isAuthenticated()){
   res.render("compose", { isLoggedIn: isLoggedIn })
@@ -132,6 +135,21 @@ app.get("/compose", (req, res) => {
     res.redirect("/login")
   }
 })
+
+
+app.post("/compose", function(req, res){
+  const post = new Post({
+    title: req.body.postTitle,
+    content: req.body.postBody
+  });
+  post.save(function(err){
+    if(!err){
+      res.redirect("/");
+    }
+  });
+});
+
+
 
 // starting server
 app.listen(3001, () => {
