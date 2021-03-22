@@ -1,12 +1,14 @@
-<%- include('partials/header') %>
-
-<div class="col-sm-4 container">
-	<div class="card">
-		<div class="card-body">
-			<a class="btn btn-block" href="/auth/twitch" role="button">
-				<i class="fab fa-google"></i>
-				Sign In with Twitch
-			</a>
-		</div>
-	</div>
+<%- include("partials/header", {isLoggedIn: isLoggedIn}); -%>
+<div class="padding-top">
+	<h1>Please Loggin with your Twitch Account</h1>
 </div>
+
+
+<div class="container-fluid padding-top">
+	<% if (isLoggedIn == false) { %> 
+	<a href="/auth/twitch"><button type="button" class="btn login-btn-page">Login with Twitch</button></a>
+	<% } else { %> 
+	<p type="button" class="btn login-btn-page">Already logged in with Twitch</p>
+	<% } %> 
+  </div>
+

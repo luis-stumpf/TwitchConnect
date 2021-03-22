@@ -9,6 +9,7 @@ const findOrCreate = require('mongoose-findorcreate')
 
 const path = require("path")
 const { profile } = require("console")
+const { RSA_NO_PADDING } = require("constants")
 
 require('dotenv').config( {
   path: path.join(__dirname, '.env')
@@ -48,7 +49,6 @@ const userSchema = new mongoose.Schema({
 	secret: String,
 });
 
-
 userSchema.plugin(findOrCreate);
 
 const User = new mongoose.model("User", userSchema);
@@ -80,6 +80,20 @@ function(accessToken, refreshToken, profile, done) {
 ))
 
 
+
+//Posts
+/*
+
+const postShema = {
+  title: String,
+  content: String
+};
+
+const Post = mongoose.model("Post", postShema);
+
+*/
+
+
 // rendering pages
 app.get(
 	"/auth/twitch",
@@ -89,13 +103,15 @@ app.get(
 app.get("/auth/twitch/callback", passport.authenticate("twitch", { failureRedirect: "/" }), function(req, res) {
   // authenticated
   isLoggedIn = true
-  res.redirect("/posts")
+  res.redirect("/")
 });
 
+// rendering home-page
 app.get("/", (req, res) => {
 	res.render("home", { isLoggedIn: isLoggedIn }) 
 })
 
+// rendering posts
 app.get("/posts", function (req, res) {
 	if(req.isAuthenticated()){
     res.render("posts", { isLoggedIn: isLoggedIn })
@@ -104,7 +120,21 @@ app.get("/posts", function (req, res) {
   }
 });
 
+// rendering login-page
+app.get("/login", (req, res) => {
+  res.render("login", { isLoggedIn: isLoggedIn })
+})
 
+// rendering compose-page
+app.get("/compose", (req, res) => {
+  if(req.isAuthenticated()){
+  res.render("compose", { isLoggedIn: isLoggedIn })
+  } else {
+    res.redirect("/login")
+  }
+})
+
+// starting server
 app.listen(3001, () => {
 	console.log("Server started on port 3001")
 })

@@ -10,6 +10,22 @@ body {
 	font-size: small;
 }
 
+.padding-top{
+	padding-top: 1em;
+}
+
+.login-btn-page {
+	
+	background-color: #2e2e2e;
+	font-weight: bold;
+	font-size: 3em;
+	color: white;
+}
+
+.form-group {
+	margin: 0 20em 5em 20em;
+}
+
 .feed {
 	position: relative;
 	text-align: left;
