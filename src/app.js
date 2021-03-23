@@ -87,12 +87,12 @@ function(accessToken, refreshToken, profile, done) {
 const postShema = {
   title: String,
   content: String,
-  writer: String
-};
+  writer: {}
+}
 
 const Post = mongoose.model("Post", postShema);
 
-
+var userData
 
 
 // rendering pages
@@ -158,7 +158,7 @@ app.post("/compose", function(req, res){
   const post = new Post({
     title: req.body.postTitle,
     content: req.body.postBody,
-    writer: currentUser
+    writer: userData
   });
   post.save(function(err){
     if(!err){

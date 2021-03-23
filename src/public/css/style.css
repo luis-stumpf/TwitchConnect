@@ -10,6 +10,21 @@ body {
 	height: 25px;
 }
 
+.post-container {
+	padding: 0.5em;
+	border: 0.2em solid #2e2e2e;
+	border-radius: 1em;
+	margin: 0.5em auto;
+	text-align: left;
+	width: 60%;
+}
+
+.writer {
+	text-align: right;
+	color: green;
+	padding-right: 0.75em;
+}
+
 .login-btn {
 	background-color: #6441a5;
 	font-weight: bold;
