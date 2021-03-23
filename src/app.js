@@ -84,11 +84,10 @@ function(accessToken, refreshToken, profile, done) {
 //test
 
 //Posts
-
-
 const postShema = {
   title: String,
-  content: String
+  content: String,
+  writer: String
 };
 
 const Post = mongoose.model("Post", postShema);
@@ -122,7 +121,7 @@ app.get("/posts", function (req, res) {
 	if(req.isAuthenticated()){
     res.render("posts", { 
       isLoggedIn: isLoggedIn,
-      userName: userData,
+      userName: userData
     })
   } else {
     res.redirect("/")
@@ -138,8 +137,6 @@ app.get("/login", (req, res) => {
 })
 
 // rendering compose-page
-
-
 app.get("/compose", (req, res) => {
   if(req.isAuthenticated()){
   res.render("compose", { 
@@ -151,11 +148,22 @@ app.get("/compose", (req, res) => {
   }
 })
 
+app.get("/feed", (req, res) => {
+  Post.find({}, function(err, posts){
+    res.render("feed", {
+      isLoggedIn: isLoggedIn,
+      userName: userData,
+      posts: posts
+    })
+  })
+})
 
+// fetching data form compose-page
 app.post("/compose", function(req, res){
   const post = new Post({
     title: req.body.postTitle,
-    content: req.body.postBody
+    content: req.body.postBody,
+    writer: currentUser
   });
   post.save(function(err){
     if(!err){
