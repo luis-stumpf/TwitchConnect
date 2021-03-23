@@ -93,6 +93,8 @@ const postShema = {
 const Post = mongoose.model("Post", postShema);
 
 
+
+
 // rendering pages
 app.get(
 	"/auth/twitch",
@@ -109,23 +111,26 @@ app.get("/auth/twitch/callback", passport.authenticate("twitch", { failureRedire
 app.get("/", (req, res) => {
   User.findOne({ displayName: currentUser }, function(err, user){
     userData = user
-    res.render("home", { 
-      isLoggedIn: isLoggedIn,
-      userName: userData
-   });
+    Post.find({}, function(err, posts){
+      res.render("home", { 
+        isLoggedIn: isLoggedIn,
+        userName: userData,
+        posts: posts
+      })
+    })
+    })
 })
-})
+
 
 // rendering posts
 app.get("/posts", function (req, res) {
-	if(req.isAuthenticated()){
-    res.render("posts", { 
+  Post.find({}, function(err, posts){
+    res.render("posts", {
       isLoggedIn: isLoggedIn,
-      userName: userData
+      userName: userData,
+      posts: posts
     })
-  } else {
-    res.redirect("/")
-  }
+  })
 });
 
 // rendering login-page
@@ -146,16 +151,6 @@ app.get("/compose", (req, res) => {
   } else {
     res.redirect("/login")
   }
-})
-
-app.get("/feed", (req, res) => {
-  Post.find({}, function(err, posts){
-    res.render("feed", {
-      isLoggedIn: isLoggedIn,
-      userName: userData,
-      posts: posts
-    })
-  })
 })
 
 // fetching data form compose-page
