@@ -5,10 +5,10 @@
 
 
 <div class="container-fluid padding-top">
-
+	<% if(!userName) { %>
 	<a href="/auth/twitch"><button type="button" class="btn login-btn-page">Login with Twitch</button></a>
- 
+	<% } else { %>
 	<p type="button" class="btn login-btn-page">Already logged in with Twitch</p>
-
+	<% } %> 
   </div>
 

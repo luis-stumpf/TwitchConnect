@@ -29,7 +29,12 @@
                 </li>
             </ul>
             <div class="d-flex">
-                <a href="/auth/twitch"><button type="button" class="btn login-btn">Login with Twitch</button></a>
+                <% if(!userName) { %>
+                    <a href="/auth/twitch"><button type="button" class="btn login-btn">Login with Twitch</button></a>
+                <% } else { %>
+                    <a href="/auth/twitch"><button type="button" class="btn login-btn"> <%= userName.displayName %> </button></a>
+                    <% } %> 
+                
 
               </div>
             

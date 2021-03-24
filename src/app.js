@@ -7,6 +7,8 @@ const passport = require("passport")
 const twitchStrategy = require("passport-twitch-new").Strategy
 const findOrCreate = require('mongoose-findorcreate')
 
+const Post = require("../src/modules/postSchema")
+
 const path = require("path")
 const { profile } = require("console")
 const { RSA_NO_PADDING } = require("constants")
@@ -51,6 +53,7 @@ const userSchema = new mongoose.Schema({
 	secret: String,
 });
 
+
 userSchema.plugin(findOrCreate);
 
 const User = new mongoose.model("User", userSchema);
@@ -82,23 +85,11 @@ function(accessToken, refreshToken, profile, done) {
 }
 ))
 
-//test
-
-//Posts
-const postShema = {
-  title: String,
-  content: String,
-  writer: String,
-  writerImg: String
-}
-
-const Post = mongoose.model("Post", postShema);
-
 function loggedIn(req, res, next) {
   if (req.user) {
       next();
   } else {
-      res.redirect('/login');
+      next()
   }
 }
 
@@ -110,41 +101,42 @@ app.get(
 
 app.get("/auth/twitch/callback", passport.authenticate("twitch", { failureRedirect: "/" }), function(req, res) {
   // authenticated
-  console.log(req.sessionID)
-  isLoggedIn = true
   res.redirect("/")
 });
 
 // rendering home-page
-app.get("/", (req, res) => {
+app.get("/", loggedIn, (req, res) => {
     Post.find({}, function(err, posts){
       res.render("home", { 
-
+        userName: req.user,
         posts: posts
       })
     })
 })
 
-
 // rendering posts
-app.get("/posts", function (req, res) {
+app.get("/posts", loggedIn, function (req, res) {
   Post.find({}, function(err, posts){
-    res.render("posts", {      
+    res.render("posts", {  
+      userName: req.user,    
       posts: posts
     })
   })
 });
 
 // rendering login-page
-app.get("/login", (req, res) => {
+app.get("/login", loggedIn, (req, res) => {
   res.render("login", { 
+    userName: req.user
   })
 })
 
 // rendering compose-page
 app.get("/compose", loggedIn, (req, res) => {
   if(req.isAuthenticated()){
-  res.render("compose")
+  res.render("compose", {
+    userName: req.user
+  })
   } else {
     res.redirect("/login")
   }
