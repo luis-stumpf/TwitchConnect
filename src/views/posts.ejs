@@ -1,4 +1,4 @@
-<%- include("partials/header", {isLoggedIn: isLoggedIn}) -%> 
+<%- include("partials/header") -%> 
 
 <h1>Feed</h1>
 
@@ -9,7 +9,7 @@
         <%=post.content%>
         <br>
         <div class="writer">
-            <a href="https://www.twitch.tv/<%= post.writer.displayName %>" target="_blank" class="btn btn-success"><img src="<%= post.writer.profileImage %>" alt="profile-img" class="profile-img"> <%= post.writer.displayName %></a>
+            <a href="https://www.twitch.tv/<%= post.writer %>" target="_blank" class="btn btn-success"><img src="<%= post.writerImg %> " alt="profile-img" class="profile-img"> <%= post.writer %></a>
         </div>
         </p>  
     </div>

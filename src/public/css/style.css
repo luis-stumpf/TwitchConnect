@@ -11,6 +11,7 @@ body {
 }
 
 .post-container {
+	background-color: #9b9b9b;
 	padding: 0.5em;
 	border: 0.2em solid #2e2e2e;
 	border-radius: 1em;

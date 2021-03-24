@@ -74,8 +74,9 @@ passport.use(new twitchStrategy({
 },
 function(accessToken, refreshToken, profile, done) {
   // Suppose we are using mongo..
+  
   currentUser = profile.display_name
-  User.findOrCreate({ twitchId: profile.id, displayName: profile.display_name, profileImage: profile.profile_image_url }, function (err, user) {
+  User.findOrCreate({ twitchId: profile.id, displayName: profile.display_name, profileImage: profile.profile_image_url}, function (err, user) {
     return done(err, user)
   })
 }
@@ -87,13 +88,19 @@ function(accessToken, refreshToken, profile, done) {
 const postShema = {
   title: String,
   content: String,
-  writer: {}
+  writer: String,
+  writerImg: String
 }
 
 const Post = mongoose.model("Post", postShema);
 
-var userData
-
+function loggedIn(req, res, next) {
+  if (req.user) {
+      next();
+  } else {
+      res.redirect('/login');
+  }
+}
 
 // rendering pages
 app.get(
@@ -103,21 +110,18 @@ app.get(
 
 app.get("/auth/twitch/callback", passport.authenticate("twitch", { failureRedirect: "/" }), function(req, res) {
   // authenticated
+  console.log(req.sessionID)
   isLoggedIn = true
   res.redirect("/")
 });
 
 // rendering home-page
 app.get("/", (req, res) => {
-  User.findOne({ displayName: currentUser }, function(err, user){
-    userData = user
     Post.find({}, function(err, posts){
       res.render("home", { 
-        isLoggedIn: isLoggedIn,
-        userName: userData,
+
         posts: posts
       })
-    })
     })
 })
 
@@ -125,9 +129,7 @@ app.get("/", (req, res) => {
 // rendering posts
 app.get("/posts", function (req, res) {
   Post.find({}, function(err, posts){
-    res.render("posts", {
-      isLoggedIn: isLoggedIn,
-      userName: userData,
+    res.render("posts", {      
       posts: posts
     })
   })
@@ -136,18 +138,13 @@ app.get("/posts", function (req, res) {
 // rendering login-page
 app.get("/login", (req, res) => {
   res.render("login", { 
-    isLoggedIn: isLoggedIn,
-    userName: userData
   })
 })
 
 // rendering compose-page
-app.get("/compose", (req, res) => {
+app.get("/compose", loggedIn, (req, res) => {
   if(req.isAuthenticated()){
-  res.render("compose", { 
-    isLoggedIn: isLoggedIn,
-    userName: userData
-  })
+  res.render("compose")
   } else {
     res.redirect("/login")
   }
@@ -158,7 +155,8 @@ app.post("/compose", function(req, res){
   const post = new Post({
     title: req.body.postTitle,
     content: req.body.postBody,
-    writer: userData
+    writer: req.user.displayName,
+    writerImg: req.user.profileImage
   });
   post.save(function(err){
     if(!err){
@@ -166,8 +164,7 @@ app.post("/compose", function(req, res){
     }
   });
 });
-
-
+//test
 
 // starting server
 app.listen(3001, () => {
