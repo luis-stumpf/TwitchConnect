@@ -8,6 +8,7 @@ const twitchStrategy = require("passport-twitch-new").Strategy
 const findOrCreate = require('mongoose-findorcreate')
 
 const Post = require("../src/modules/postSchema")
+const loggedIn = require("../src/modules/loggedIn")
 
 const path = require("path")
 const { profile } = require("console")
@@ -22,9 +23,6 @@ const app = express();
 app.set("view engine", "ejs")
 app.use(express.static("public"))
 app.use(bodyParser.urlencoded({extended: true}));
-
-var isLoggedIn = false
-var currentUser 
 
 // using sessions
 app.use(session({
@@ -78,20 +76,13 @@ passport.use(new twitchStrategy({
 function(accessToken, refreshToken, profile, done) {
   // Suppose we are using mongo..
   
-  currentUser = profile.display_name
   User.findOrCreate({ twitchId: profile.id, displayName: profile.display_name, profileImage: profile.profile_image_url}, function (err, user) {
     return done(err, user)
   })
 }
 ))
 
-function loggedIn(req, res, next) {
-  if (req.user) {
-      next();
-  } else {
-      next()
-  }
-}
+
 
 // rendering pages
 app.get(
