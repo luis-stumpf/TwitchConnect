@@ -3,6 +3,14 @@ body {
 	margin: auto;
 	text-align: center;
 }
+a {
+	text-decoration: none;
+	color: black;
+}
+
+.contact {
+	text-align: right;
+}
 
 .profile-img {
 	border-radius: 30px;
@@ -22,7 +30,7 @@ body {
 
 .writer {
 	text-align: right;
-	color: green;
+	color: black;
 	padding-right: 0.75em;
 }
 
@@ -57,10 +65,12 @@ body {
 	background-color: #9b9b9b;
 }
 .preview {
+	border-radius: 15px;
+	border: 0.2em solid #9b80ce;
 	text-align: center;
-	margin: 3rem auto;
-	height: 20rem;
-	width: 70rem;
+	margin: 3em auto;
+	padding-bottom: 1em;
+	width: 80%;
 	background-color: teal;
 }
 

@@ -2,15 +2,19 @@
 
 <h1>Feed</h1>
 
-<% posts.forEach(function(post){ %>
+<% posts.slice().reverse().forEach(function(post){ %>
     <div class="post-container">
         <h1><%=post.title%></h1>
         <p>
         <%=post.content%>
         <br>
+        
         <div class="writer">
+            <%= post.time %>
             <a href="https://www.twitch.tv/<%= post.writer %>" target="_blank" class="btn btn-success"><img src="<%= post.writerImg %> " alt="profile-img" class="profile-img"> <%= post.writer %></a>
         </div>
         </p>  
     </div>
 <% }) %>
+
+<%- include("partials/footer"); -%>

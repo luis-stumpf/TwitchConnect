@@ -1,41 +1,42 @@
 <%- include("partials/header"); -%>
 
-<br>
+<br />
 <h1>TwitchConnect</h1>
-<br>
+<br />
 
+<div class="preview container">
+	<br />
+	<h2>Latest Posts</h2>
+	<% for(i = posts.length - 1; i >= posts.length - 3; i--) { %>
+	<div class="post-container container">
+		<h4><%=posts[i].title%></h4>
+		<p><%=posts[i].content.substring(0, 100) + " ..."%></p>
 
-<div class="preview">
-   Feed prev
-   <%  posts.forEach(function(post){ %>
-
-    <h1><%=post.title%></h1>
-    <p>
-    <%=post.content.substring(0, 100) + " ..."%>
-    <a href="/posts/<%=post._id%>">Read More</a>
-    </p>
-
-
-    <% }) %>
-
+		<div class="contact">
+			<a href="https://www.twitch.tv/<%= posts[i].writer %> " target="_blank"
+				><img
+					src="<%= posts[i].writerImg %> "
+					alt="profile-img"
+					class="profile-img"
+				/>
+				<%= posts[i].writer %>
+			</a>
+			<a href="mailto:<%= posts[i].writerEmail %> ">📧</a>
+		</div>
+	</div>
+	<% } %>
 </div>
 
 <div class="container">
-  <div class="row">
-    <div class="col-sm">
-      Gründe deine Community
-    </div>
-    <div class="col-sm">
-      Lasse deinen Stream wachsen
-    </div>
-    <div class="col-sm">
-      Finde Streamerbuddies 
-
-      
-    </div>
-  </div>
+	<div class="row">
+		<div class="col-sm">Gründe deine Community</div>
+		<div class="col-sm">Lasse deinen Stream wachsen</div>
+		<div class="col-sm">Finde Streamerbuddies</div>
+	</div>
 </div>
 
-<a href="/posts"><button type="button" class="btn btn-dark colab">Start Colaborating</button></a>
+<a href="/posts"
+	><button type="button" class="btn btn-dark colab">Start Colaborating</button>
+</a>
 
-<%- include("partials/footer"); -%> 
+<%- include("partials/footer"); -%>

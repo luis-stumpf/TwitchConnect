@@ -50,6 +50,7 @@ const userSchema = new mongoose.Schema({
 	twitchId: String,
 	displayName: String,
 	profileImage: String,
+	email: String,
 	secret: String,
 });
 
@@ -77,13 +78,12 @@ passport.use(
 			scope: 'user_read',
 		},
 		function (accessToken, refreshToken, profile, done) {
-			// Suppose we are using mongo..
-
 			User.findOrCreate(
 				{
 					twitchId: profile.id,
 					displayName: profile.display_name,
 					profileImage: profile.profile_image_url,
+					email: profile.email,
 				},
 				function (err, user) {
 					return done(err, user);
@@ -150,6 +150,8 @@ app.post('/compose', function (req, res) {
 		content: req.body.postBody,
 		writer: req.user.displayName,
 		writerImg: req.user.profileImage,
+		writerEmail: req.user.email,
+		time: new Date().toLocaleString(),
 	});
 	post.save(function (err) {
 		if (!err) {
