@@ -12,6 +12,7 @@
         <div class="writer">
             <%= post.time %>
             <a href="https://www.twitch.tv/<%= post.writer %>" target="_blank" class="btn btn-success"><img src="<%= post.writerImg %> " alt="profile-img" class="profile-img"> <%= post.writer %></a>
+            <a class="mail" href="mailto:<%= posts[i].writerEmail %> ">📧</a>
         </div>
         </p>  
     </div>

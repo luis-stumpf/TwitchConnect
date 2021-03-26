@@ -1,13 +1,13 @@
 # TwitchConnect
 
-This is a website that provides a way to connect with other streamers and make friend
+This is a website that provides a way to connect with other streamers and make friends
 
 ## Services provided
 
 - authenticate with your Twitch Account
 - find people who are searching for stream partners
-- contact peoples you think it would be fun to stream with
-- post which people you are looking searching for
+- contact people you think it would be fun to stream with
+- post which people you are searching for
 - find new streamer buddies you can grow together with
 
 ## NPM packages
@@ -24,7 +24,7 @@ This is a website that provides a way to connect with other streamers and make f
 - passport-twitch-new
 - path
 
-## Database informations
+## Database information
 
 - the application uses an mongoDB data base running in a Docker container
 - Data is stored in two tables
